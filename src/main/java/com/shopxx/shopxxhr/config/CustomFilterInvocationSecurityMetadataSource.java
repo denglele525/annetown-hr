@@ -1,7 +1,6 @@
 package com.shopxx.shopxxhr.config;
 
 import com.shopxx.shopxxhr.entity.Menu;
-import com.shopxx.shopxxhr.entity.Role;
 import com.shopxx.shopxxhr.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -13,30 +12,33 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/*
+ * 根据用户传来的请求地址分析出需要的角色。
+ *
+ * */
 @Component
-public class CustomMetadataSource implements FilterInvocationSecurityMetadataSource {
+public class CustomFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
+
     @Autowired
     MenuService menuService;
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Override
-    public Collection<ConfigAttribute> getAttributes(Object o) {
-        String requestUrl = ((FilterInvocation) o).getRequestUrl();
-        List<Menu> allMenu = menuService.getAllMenu();
-        for (Menu menu : allMenu) {
-            if (antPathMatcher.match(menu.getUrl(), requestUrl)
-                    && menu.getRoles().size() > 0) {
-                List<Role> roles = menu.getRoles();
-                int size = roles.size();
-                String[] values = new String[size];
-                for (int i = 0; i < size; i++) {
-                    values[i] = roles.get(i).getName();
-                }
-                return SecurityConfig.createList(values);
-            }
+    public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        String requestUrl = ((FilterInvocation) object).getRequestUrl();
+        List<Menu> menus = menuService.getAllMenusWithRole();
+        Menu menu = menus.stream().filter(
+                one -> antPathMatcher.match(one.getUrl(), requestUrl)
+        ).findAny().orElse(null);
+        if (menu != null) {
+            List<String> roleNameList = menu.getRoles().stream().map(
+                    role -> role.getName()
+            ).collect(Collectors.toList());
+            String[] roleNames = roleNameList.toArray(new String[roleNameList.size()]);
+            return SecurityConfig.createList(roleNames);
         }
-        //没有匹配上的资源，都是登录访问
         return SecurityConfig.createList("ROLE_LOGIN");
     }
 
@@ -47,6 +49,7 @@ public class CustomMetadataSource implements FilterInvocationSecurityMetadataSou
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return FilterInvocation.class.isAssignableFrom(aClass);
+        return true;
     }
+
 }

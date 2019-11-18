@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Proxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hr")
+@Proxy(lazy = false)
 public class Hr implements UserDetails {
 
     @Id
@@ -31,9 +33,9 @@ public class Hr implements UserDetails {
     private String username;
     private String password;
     private String remark;
-    @Transient
-    private List<Role> roles;
     private String userface;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Role> role;
 
     @Override
     public boolean isEnabled() {
@@ -63,20 +65,25 @@ public class Hr implements UserDetails {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>(role.size());
+        role.stream().forEach(
+                role -> authorities.add(new SimpleGrantedAuthority(role.getName()))
+        );
         return authorities;
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
     }
 
+    public List<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(List<Role> role) {
+        this.role = role;
+    }
 }
