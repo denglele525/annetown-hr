@@ -1,4 +1,4 @@
-package com.shopxx.shopxxhr.Controller;
+package com.shopxx.shopxxhr.Controller.config;
 
 import com.shopxx.shopxxhr.entity.Hr;
 import com.shopxx.shopxxhr.entity.Menu;

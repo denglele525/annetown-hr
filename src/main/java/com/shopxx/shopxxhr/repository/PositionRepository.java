@@ -1,16 +1,20 @@
 package com.shopxx.shopxxhr.repository;
 
-import com.shopxx.shopxxhr.entity.Hr;
+import com.shopxx.shopxxhr.entity.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 @Repository
 @Validated
-public interface HrRespository extends JpaRepository<Hr, Integer>, JpaSpecificationExecutor<Hr>, PagingAndSortingRepository<Hr, Integer> {
+public interface PositionRepository extends JpaRepository<Position, Integer>, JpaSpecificationExecutor<Position>, PagingAndSortingRepository<Position, Integer> {
 
-    Hr findByUsername(String username);
+    List<Position> findAll();
+
+//    int addPosition(Position position);
 
 }

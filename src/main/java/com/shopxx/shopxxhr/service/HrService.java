@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 public class HrService implements UserDetailsService {
+
     @Autowired
     HrRespository hrRespository;
 

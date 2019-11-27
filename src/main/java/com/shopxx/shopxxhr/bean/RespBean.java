@@ -70,6 +70,10 @@ public class RespBean {
         return new RespBean(status.getCode(), status.getStandardMessage(), null);
     }
 
+    public static RespBean ok(String message) {
+        return new RespBean(Status.SUCCESS.getCode(), message, null);
+    }
+
     public enum Status {
         SUCCESS(200, "OK"),
         BAD_REQUEST(400, "Bad Request"),
