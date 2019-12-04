@@ -10,4 +10,5 @@ public interface MenuService {
 
     List<Menu> getAllMenusWithRole();
 
+    List<Menu> getAllMenus();
 }

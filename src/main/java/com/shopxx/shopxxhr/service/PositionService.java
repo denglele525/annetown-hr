@@ -13,4 +13,7 @@ public interface PositionService {
     void deletePositionById(Integer id);
 
     Position findOne(Position position);
+
+    void deletePositionsByIds(Integer[] ids);
+
 }

@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PositionServiceImpl implements PositionService {
@@ -40,7 +42,6 @@ public class PositionServiceImpl implements PositionService {
     @Transactional
     public Position saveOrUpdatePosition(Position position) {
         position.setCreateDate(new Date());
-        position.setEnabled(true);
         return positionRepository.save(position);
     }
 
@@ -53,6 +54,17 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public Position findOne(Position position) {
         return positionRepository.findById(position.getId()).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deletePositionsByIds(Integer[] ids) {
+        Optional.ofNullable(ids)
+                .ifPresent(
+                        it -> Arrays.asList(it).stream().forEach(
+                                id -> deletePositionById(id)
+                        )
+                );
     }
 
 }

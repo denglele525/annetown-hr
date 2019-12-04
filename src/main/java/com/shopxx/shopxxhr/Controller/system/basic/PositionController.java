@@ -41,4 +41,15 @@ public class PositionController {
         return RespBean.ok("删除职位成功！");
     }
 
+    @DeleteMapping("/")
+    public RespBean deletePositions(Integer[] ids) {
+        try {
+            positionService.deletePositionsByIds(ids);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HrException(ExceptionEnum.POSITION_DELETE_FAILED);
+        }
+        return RespBean.ok("删除职位成功！");
+    }
+
 }

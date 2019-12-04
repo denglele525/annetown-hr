@@ -98,23 +98,37 @@ public class MenuServiceImpl implements MenuService {
                     menu.setRoles(roles);
                 }
         );
-
-//        List<Menu> menus = jpaQueryFactory.select(
-//                Projections.bean(Menu.class,
-//                        qMenu.id,
-//                        qMenu.url,
-//                        qMenu.path,
-//                        qMenu.component,
-//                        qMenu.name,
-//                        qMenu.iconCls,
-//                        qMenu.parentId,
-//                        qMenu.enabled,
-//                        qMenu.keepAlive,
-//                        qMenu.requireAuth,
-//                        Projections.bean(Role.class, qRole.id, qRole.name, qRole.nameZh).as("role")
-//                )).
-//                from(qMenu).innerJoin(qMenu.role, qRole).distinct().fetch();
         return menus;
+    }
+
+    @Override
+    public List<Menu> getAllMenus() {
+        List<Menu> menus = new ArrayList<>();
+        QMenu qMenu = QMenu.menu;
+        Menu ancentMenu = jpaQueryFactory.select(
+                Projections.bean(Menu.class, qMenu.id, qMenu.name))
+                .from(qMenu)
+                .where(qMenu.parentId.isNull()).fetchOne();
+        findChildrenMenus(ancentMenu, 3);
+        menus.add(ancentMenu);
+        return menus;
+    }
+
+    private void findChildrenMenus(Menu menu, Integer level) {
+        QMenu qMenu = new QMenu("menu" + menu.getId());
+        List<Menu> childrenMenus = jpaQueryFactory.select(
+                Projections.bean(Menu.class, qMenu.id, qMenu.name))
+                .from(qMenu)
+                .where(qMenu.parentId.eq(menu.getId())).fetch();
+        menu.setChildren(childrenMenus);
+        level -= level;
+        if (level == 1) {
+            return;
+        }
+        for (Menu childrenMenu : childrenMenus) {
+            findChildrenMenus(childrenMenu, level);
+        }
+        return;
     }
 
 }
