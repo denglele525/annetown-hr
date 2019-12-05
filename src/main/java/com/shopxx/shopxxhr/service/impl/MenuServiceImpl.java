@@ -4,16 +4,16 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shopxx.shopxxhr.entity.*;
 import com.shopxx.shopxxhr.repository.MenuRepository;
+import com.shopxx.shopxxhr.repository.MenuRoleRepository;
 import com.shopxx.shopxxhr.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -23,6 +23,8 @@ public class MenuServiceImpl implements MenuService {
     protected EntityManager entityManager;
     @Autowired
     MenuRepository menuRepository;
+    @Autowired
+    MenuRoleRepository menuRoleRepository;
 
     protected JPAQueryFactory jpaQueryFactory;
 
@@ -94,7 +96,8 @@ public class MenuServiceImpl implements MenuService {
                             from(qRole).
                             innerJoin(qRole.menu, qMenu).
                             where(qMenu.eq(menu)).
-                            distinct().fetch();
+                            distinct()
+                            .fetch();
                     menu.setRoles(roles);
                 }
         );
@@ -108,10 +111,42 @@ public class MenuServiceImpl implements MenuService {
         Menu ancentMenu = jpaQueryFactory.select(
                 Projections.bean(Menu.class, qMenu.id, qMenu.name))
                 .from(qMenu)
-                .where(qMenu.parentId.isNull()).fetchOne();
+                .where(qMenu.parentId.isNull())
+                .fetchOne();
         findChildrenMenus(ancentMenu, 3);
         menus.add(ancentMenu);
         return menus;
+    }
+
+    @Override
+    public List<Integer> getMidsByRid(Integer rid) {
+        QMenu qMenu = QMenu.menu;
+        QRole qRole = QRole.role;
+        List<Integer> menuIds = jpaQueryFactory.select(qMenu.id)
+                .from(qMenu)
+                .innerJoin(qMenu.role, qRole)
+                .where(qRole.id.eq(rid))
+                .fetch();
+        return menuIds;
+    }
+
+    @Override
+    @Transactional
+    public void updateMenuRole(Integer rid, Integer[] mids) {
+        menuRoleRepository.deleteByRoleId(rid);
+        Optional.ofNullable(mids)
+                .ifPresent(
+                        it -> {
+                            Arrays.stream(it).forEach(
+                                    mid -> {
+                                        MenuRole pMenuRole = new MenuRole();
+                                        pMenuRole.setMenuID(mid);
+                                        pMenuRole.setRoleId(rid);
+                                        menuRoleRepository.save(pMenuRole);
+                                    }
+                            );
+                        }
+                );
     }
 
     private void findChildrenMenus(Menu menu, Integer level) {
@@ -119,7 +154,8 @@ public class MenuServiceImpl implements MenuService {
         List<Menu> childrenMenus = jpaQueryFactory.select(
                 Projections.bean(Menu.class, qMenu.id, qMenu.name))
                 .from(qMenu)
-                .where(qMenu.parentId.eq(menu.getId())).fetch();
+                .where(qMenu.parentId.eq(menu.getId()))
+                .fetch();
         menu.setChildren(childrenMenus);
         level -= level;
         if (level == 1) {

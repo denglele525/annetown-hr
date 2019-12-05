@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "menu")
-//@Proxy(lazy = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Menu implements Serializable {
