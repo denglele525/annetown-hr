@@ -31,7 +31,6 @@ public class JobLevelServiceImpl implements JobLevelService {
         jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
 
-
     @Override
     public List<JobLevel> getAllJobLevels() {
         return jobLevelRepository.findAll();

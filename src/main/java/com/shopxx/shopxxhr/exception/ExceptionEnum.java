@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public enum ExceptionEnum {
 
     POSITION_DELETE_FAILED(500, "删除职位失败(该数据有关联数据)"),
-    JOBLEVEL_DELETE_FAILED(500, "删除职称失败(该数据有关联数据)");
+    JOBLEVEL_DELETE_FAILED(500, "删除职称失败(该数据有关联数据)"),
+    ROLR_DELETE_FAILED(500, "删除角色失败(该数据有关联数据)");
     private int value;
 
     private String message;

@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shopxx.shopxxhr.entity.Role;
 import com.shopxx.shopxxhr.repository.RoleRepository;
 import com.shopxx.shopxxhr.service.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,19 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public Role saveOrUpdateRole(Role role) {
+        if (!StringUtils.startsWith(role.getName(), "ROLE_")) {
+            role.setName("ROLE_" + role.getName());
+        }
+        return roleRepository.save(role);
+    }
+
+    @Override
+    public void deleteRoleById(Integer id) {
+        roleRepository.deleteById(id);
     }
 
 }

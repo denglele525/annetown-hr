@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hr")
-//@Proxy(lazy = false)
 public class Hr implements UserDetails {
 
     @Id

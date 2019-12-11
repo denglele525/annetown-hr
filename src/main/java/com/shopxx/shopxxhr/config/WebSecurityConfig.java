@@ -141,8 +141,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     @Override
                     public void commence(HttpServletRequest req, HttpServletResponse resp, AuthenticationException e) throws IOException, ServletException {
                         resp.setContentType("application/json;charset=utf-8");
-
-//                        httpServletResponse.setStatus(401);
+                        resp.setStatus(401);
                         ObjectMapper objectMapper = new ObjectMapper();
                         PrintWriter out = resp.getWriter();
                         RespBean respBean = RespBean.ofError("访问失败！");

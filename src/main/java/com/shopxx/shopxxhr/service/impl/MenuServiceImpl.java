@@ -136,16 +136,14 @@ public class MenuServiceImpl implements MenuService {
         menuRoleRepository.deleteByRoleId(rid);
         Optional.ofNullable(mids)
                 .ifPresent(
-                        it -> {
-                            Arrays.stream(it).forEach(
-                                    mid -> {
-                                        MenuRole pMenuRole = new MenuRole();
-                                        pMenuRole.setMenuID(mid);
-                                        pMenuRole.setRoleId(rid);
-                                        menuRoleRepository.save(pMenuRole);
-                                    }
-                            );
-                        }
+                        it -> Arrays.stream(it).forEach(
+                                mid -> {
+                                    MenuRole pMenuRole = new MenuRole();
+                                    pMenuRole.setMenuID(mid);
+                                    pMenuRole.setRoleId(rid);
+                                    menuRoleRepository.save(pMenuRole);
+                                }
+                        )
                 );
     }
 
