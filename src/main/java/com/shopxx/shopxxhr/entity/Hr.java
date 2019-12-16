@@ -64,11 +64,10 @@ public class Hr implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(role.size());
-        role.stream().forEach(
-                role -> authorities.add(new SimpleGrantedAuthority(role.getName()))
-        );
+        role.stream().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return authorities;
     }
 

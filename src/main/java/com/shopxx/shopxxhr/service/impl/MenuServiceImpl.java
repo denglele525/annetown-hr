@@ -91,12 +91,12 @@ public class MenuServiceImpl implements MenuService {
         List<Menu> menus = menuRepository.findAll();
         menus.stream().forEach(
                 menu -> {
-                    List<Role> roles = jpaQueryFactory.select(
-                            Projections.bean(Role.class, qRole.id, qRole.name, qRole.nameZh)).
-                            from(qRole).
-                            innerJoin(qRole.menu, qMenu).
-                            where(qMenu.eq(menu)).
-                            distinct()
+                    List<Role> roles = jpaQueryFactory
+                            .select(Projections.bean(Role.class, qRole.id, qRole.name, qRole.nameZh))
+                            .from(qRole)
+                            .innerJoin(qRole.menu, qMenu)
+                            .where(qMenu.eq(menu))
+                            .distinct()
                             .fetch();
                     menu.setRoles(roles);
                 }
@@ -149,8 +149,8 @@ public class MenuServiceImpl implements MenuService {
 
     private void findChildrenMenus(Menu menu, Integer level) {
         QMenu qMenu = new QMenu("menu" + menu.getId());
-        List<Menu> childrenMenus = jpaQueryFactory.select(
-                Projections.bean(Menu.class, qMenu.id, qMenu.name))
+        List<Menu> childrenMenus = jpaQueryFactory
+                .select(Projections.bean(Menu.class, qMenu.id, qMenu.name))
                 .from(qMenu)
                 .where(qMenu.parentId.eq(menu.getId()))
                 .fetch();
