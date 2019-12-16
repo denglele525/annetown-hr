@@ -29,4 +29,13 @@ public class DepartmentController {
         return RespBean.ofError("添加失败！");
     }
 
+    @DeleteMapping("/{id}")
+    public RespBean deleteDep(@PathVariable Integer id) {
+        Integer result = departmentService.deleteDep(id);
+        if (result == 0) {
+            return RespBean.ok("删除部门成功！");
+        }
+        return RespBean.ofError("删除部门失败！");
+    }
+
 }
