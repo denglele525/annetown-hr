@@ -7,6 +7,7 @@ import com.shopxx.shopxxhr.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -35,6 +36,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Role saveOrUpdateRole(Role role) {
         if (!StringUtils.startsWith(role.getName(), "ROLE_")) {
             role.setName("ROLE_" + role.getName());
@@ -43,6 +45,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public void deleteRoleById(Integer id) {
         roleRepository.deleteById(id);
     }

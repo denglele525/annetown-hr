@@ -6,6 +6,7 @@ import com.shopxx.shopxxhr.repository.JobLevelRepository;
 import com.shopxx.shopxxhr.service.JobLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -37,12 +38,14 @@ public class JobLevelServiceImpl implements JobLevelService {
     }
 
     @Override
+    @Transactional
     public JobLevel saveOrUpdateJobLevel(JobLevel jobLevel) {
         jobLevel.setCreateDate(new Date());
         return jobLevelRepository.save(jobLevel);
     }
 
     @Override
+    @Transactional
     public void deleteJobLevelById(Integer id) {
         jobLevelRepository.deleteById(id);
     }
@@ -53,6 +56,7 @@ public class JobLevelServiceImpl implements JobLevelService {
     }
 
     @Override
+    @Transactional
     public void deleteJobLevelsByIds(Integer[] ids) {
         Optional.ofNullable(ids)
                 .ifPresent(

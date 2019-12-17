@@ -29,6 +29,7 @@ public class Hr implements UserDetails {
     private String address;
     private boolean enabled;
     private String username;
+    @JsonIgnore
     private String password;
     private String remark;
     private String userface;

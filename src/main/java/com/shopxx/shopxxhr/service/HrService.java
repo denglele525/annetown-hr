@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -60,8 +61,9 @@ public class HrService implements UserDetailsService {
         QRole qRole = QRole.role;
         List<Hr> hrs = jpaQueryFactory.select(Projections.bean(Hr.class, qHr.id, qHr.name, qHr.phone, qHr.telephone, qHr.address, qHr.enabled, qHr.username, qHr.userface, qHr.remark))
                 .from(qHr)
-                .innerJoin(qHr.role, qRole)
+                .leftJoin(qHr.role, qRole)
                 .where(qHr.id.notIn(HrUtil.getCurrentHr().getId()))
+                .distinct()
                 .fetch();
         hrs.stream().forEach(
                 hr -> {
@@ -74,6 +76,15 @@ public class HrService implements UserDetailsService {
                 }
         );
         return hrs;
+    }
+
+    @Transactional
+    public Hr saveOrUpdateHr(Hr hr) {
+        Hr pHr = hrRespository.findById(hr.getId()).orElse(null);
+        if (hr != null) {
+            hr.setPassword(pHr.getPassword());
+        }
+        return hrRespository.save(hr);
     }
 
 }
