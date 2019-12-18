@@ -2,11 +2,9 @@ package com.shopxx.shopxxhr.service;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.shopxx.shopxxhr.entity.Hr;
-import com.shopxx.shopxxhr.entity.QHr;
-import com.shopxx.shopxxhr.entity.QRole;
-import com.shopxx.shopxxhr.entity.Role;
+import com.shopxx.shopxxhr.entity.*;
 import com.shopxx.shopxxhr.repository.HrRespository;
+import com.shopxx.shopxxhr.repository.HrRoleRepository;
 import com.shopxx.shopxxhr.utils.HrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HrService implements UserDetailsService {
 
     @Autowired
     HrRespository hrRespository;
+    @Autowired
+    HrRoleRepository hrRoleRepository;
 
     @Autowired
     @PersistenceContext
@@ -85,6 +87,22 @@ public class HrService implements UserDetailsService {
             hr.setPassword(pHr.getPassword());
         }
         return hrRespository.save(hr);
+    }
+
+    @Transactional
+    public void updateHrRole(Integer hrid, Integer[] rids) {
+        hrRoleRepository.deleteByHrId(hrid);
+        Optional.ofNullable(rids)
+                .ifPresent(
+                        it -> Arrays.stream(it).forEach(
+                                rid -> {
+                                    HrRole pHrRole = new HrRole();
+                                    pHrRole.setRoleId(rid);
+                                    pHrRole.setHrId(hrid);
+                                    hrRoleRepository.save(pHrRole);
+                                }
+                        )
+                );
     }
 
 }
