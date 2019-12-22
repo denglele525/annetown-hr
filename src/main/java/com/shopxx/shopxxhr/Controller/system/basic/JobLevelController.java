@@ -46,7 +46,6 @@ public class JobLevelController {
         try {
             jobLevelService.deleteJobLevelsByIds(ids);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new HrException(ExceptionEnum.JOBLEVEL_DELETE_FAILED);
         }
         return RespBean.ok("删除职称成功！");

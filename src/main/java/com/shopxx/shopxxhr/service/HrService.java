@@ -1,5 +1,6 @@
 package com.shopxx.shopxxhr.service;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shopxx.shopxxhr.entity.*;
@@ -58,13 +59,16 @@ public class HrService implements UserDetailsService {
         return roles;
     }
 
-    public List<Hr> getAllHrs() {
+    public List<Hr> getAllHrs(String keywords) {
         QHr qHr = QHr.hr;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qHr.id.notIn(HrUtil.getCurrentHr().getId()));
+        Optional.ofNullable(keywords).ifPresent(it -> booleanBuilder.and(qHr.name.like("%" + it + "%")));
         QRole qRole = QRole.role;
         List<Hr> hrs = jpaQueryFactory.select(Projections.bean(Hr.class, qHr.id, qHr.name, qHr.phone, qHr.telephone, qHr.address, qHr.enabled, qHr.username, qHr.userface, qHr.remark))
                 .from(qHr)
                 .leftJoin(qHr.role, qRole)
-                .where(qHr.id.notIn(HrUtil.getCurrentHr().getId()))
+                .where(booleanBuilder)
                 .distinct()
                 .fetch();
         hrs.stream().forEach(
@@ -103,6 +107,11 @@ public class HrService implements UserDetailsService {
                                 }
                         )
                 );
+    }
+
+    @Transactional
+    public void deleteHrById(Integer id) {
+        hrRespository.deleteById(id);
     }
 
 }
