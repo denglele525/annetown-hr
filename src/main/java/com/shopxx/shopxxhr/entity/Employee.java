@@ -1,5 +1,6 @@
 package com.shopxx.shopxxhr.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 @Table(name = "employee")
 public class Employee {
 
@@ -24,13 +26,15 @@ public class Employee {
     private String idCard;
     @Enumerated(EnumType.STRING)
     private Wedlock wedlock;
-    private Integer nationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Nation nation;
     private String nativePlace;
     private Integer politicId;
     private String email;
     private String phone;
     private String address;
-    private Integer departmentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Department department;
     private Integer joblevelId;
     private Integer posId;
     private String engageForm;

@@ -42,4 +42,5 @@ public class HrRole {
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
+
 }

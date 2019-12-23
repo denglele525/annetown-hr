@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Repository
 @Validated
-public interface HrRespository extends JpaRepository<Hr, Integer>, JpaSpecificationExecutor<Hr>, PagingAndSortingRepository<Hr, Integer> {
+public interface HrRespository extends JpaRepository<Hr, Integer>, JpaSpecificationExecutor<Hr>, PagingAndSortingRepository<Hr, Integer>, BaseRepository<Hr, Integer> {
 
     Hr findByUsername(String username);
 

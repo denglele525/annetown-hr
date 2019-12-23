@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Repository
 @Validated
-public interface HrRoleRepository extends JpaRepository<HrRole, Integer>, JpaSpecificationExecutor<HrRole>, PagingAndSortingRepository<HrRole, Integer> {
+public interface HrRoleRepository extends JpaRepository<HrRole, Integer>, JpaSpecificationExecutor<HrRole>, PagingAndSortingRepository<HrRole, Integer>, BaseRepository<HrRole, Integer> {
 
     void deleteByHrId(Integer hrId);
 

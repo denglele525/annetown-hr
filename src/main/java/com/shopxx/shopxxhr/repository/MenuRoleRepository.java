@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Repository
 @Validated
-public interface MenuRoleRepository extends JpaRepository<MenuRole, Integer>, JpaSpecificationExecutor<MenuRole>, PagingAndSortingRepository<MenuRole, Integer> {
+public interface MenuRoleRepository extends JpaRepository<MenuRole, Integer>, JpaSpecificationExecutor<MenuRole>, PagingAndSortingRepository<MenuRole, Integer>, BaseRepository<MenuRole, Integer> {
 
     void deleteByRoleId(Integer roleId);
 

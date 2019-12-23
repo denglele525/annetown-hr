@@ -9,6 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 @Repository
 @Validated
-public interface DepartmentRepository extends JpaRepository<Department, Integer>, JpaSpecificationExecutor<Department>, PagingAndSortingRepository<Department, Integer> {
+public interface DepartmentRepository extends JpaRepository<Department, Integer>, JpaSpecificationExecutor<Department>, PagingAndSortingRepository<Department, Integer>, BaseRepository<Department, Integer> {
 
 }
