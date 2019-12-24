@@ -1,5 +1,6 @@
 package com.shopxx.shopxxhr.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Employee {
     private Integer id;
     private String name;
     private String gender;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date birthday;
     private String idCard;
     @Enumerated(EnumType.STRING)
@@ -29,27 +31,35 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY)
     private Nation nation;
     private String nativePlace;
-    private Integer politicId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PoliticsStatus politic;
     private String email;
     private String phone;
     private String address;
     @ManyToOne(fetch = FetchType.LAZY)
     private Department department;
-    private Integer joblevelId;
-    private Integer posId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private JobLevel joblevel;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Position pos;
     private String engageForm;
     @Enumerated(EnumType.STRING)
     private TiptopDegree tiptopDegree;
     private String specialty;
     private String school;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date beginDate;
     @Enumerated(EnumType.STRING)
     private WorkState workState;
     private String workId;
     private Double contractTerm;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date conversionTime;
+    @JsonFormat(pattern = "yyyy-MM-d", timezone = "Asia/Shanghai")
     private Date notworkDate;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date beginContract;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date endContract;
     private Integer workAge;
 

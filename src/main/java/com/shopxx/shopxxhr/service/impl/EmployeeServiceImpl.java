@@ -22,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public RespPageBean getEmployeeByPage(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Employee> all = employeeRepository.findAll(pageable);
-        int totalSize = all.getSize();
+        long totalSize = all.getTotalElements();
         List<Employee> employees = all.getContent();
         RespPageBean respPageBean = new RespPageBean();
         respPageBean.setData(employees);
