@@ -79,7 +79,7 @@ public class MenuServiceImpl implements MenuService {
                     menuParents.add(menuParent);
                 }
         );
-        List menus = new ArrayList(new HashSet(menuParents));
+        List menus = new ArrayList(new LinkedHashSet(menuParents));
         return menus;
     }
 

@@ -1,6 +1,8 @@
 package com.shopxx.shopxxhr.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.shopxx.shopxxhr.entity.Employee;
+import com.shopxx.shopxxhr.entity.QEmployee;
 import com.shopxx.shopxxhr.entity.RespPageBean;
 import com.shopxx.shopxxhr.repository.EmployeeRepository;
 import com.shopxx.shopxxhr.service.EmployeeService;
@@ -19,15 +21,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     EmployeeRepository employeeRepository;
 
     @Override
-    public RespPageBean getEmployeeByPage(Integer page, Integer size) {
+    public RespPageBean getEmployeeByPage(Integer page, Integer size, String keyword) {
+        QEmployee qEmployee = QEmployee.employee;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (keyword != null) {
+            booleanBuilder.and(qEmployee.name.like("%" + keyword + "%"));
+        }
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Employee> all = employeeRepository.findAll(pageable);
+        Page<Employee> all = employeeRepository.findAll(booleanBuilder, pageable);
         long totalSize = all.getTotalElements();
         List<Employee> employees = all.getContent();
         RespPageBean respPageBean = new RespPageBean();
         respPageBean.setData(employees);
         respPageBean.setTotal(totalSize);
         return respPageBean;
+    }
+
+    @Override
+    public Employee saveOrUpdateDepartment(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
 }
