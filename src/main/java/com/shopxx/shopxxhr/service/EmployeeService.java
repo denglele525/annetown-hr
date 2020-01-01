@@ -9,4 +9,5 @@ public interface EmployeeService {
 
     Employee saveOrUpdateDepartment(Employee employee);
 
+    Integer maxWorkID();
 }

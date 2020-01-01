@@ -26,32 +26,40 @@ public class RespBean {
         return code;
     }
 
-    public void setCode(int code) {
+    public RespBean setCode(int code) {
         this.code = code;
+        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public RespBean setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     public Object getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public RespBean setData(Object data) {
         this.data = data;
+        return this;
     }
 
     public boolean isMore() {
         return more;
     }
 
-    public void setMore(boolean more) {
+    public RespBean setMore(boolean more) {
         this.more = more;
+        return this;
+    }
+
+    public static RespBean build() {
+        return new RespBean();
     }
 
     public static RespBean ofMessage(int code, String message) {
@@ -64,6 +72,10 @@ public class RespBean {
 
     public static RespBean ofSuccess(Object data) {
         return new RespBean(Status.SUCCESS.getCode(), Status.SUCCESS.getStandardMessage(), data);
+    }
+
+    public static RespBean ok(String message, Object data) {
+        return new RespBean(Status.SUCCESS.getCode(), message, data);
     }
 
     public static RespBean ofStatus(Status status) {

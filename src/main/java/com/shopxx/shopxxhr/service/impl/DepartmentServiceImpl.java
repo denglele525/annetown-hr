@@ -78,7 +78,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         List<Employee> employees = jpaQueryFactory.select(Projections.bean(Employee.class, qEmployee.id))
                 .from(qEmployee)
-                .where(qEmployee.departmentId.eq(did))
+                .where(qEmployee.department.id.eq(did))
                 .fetch();
         if (employees.size() > 0) {
             throw new HrException(ExceptionEnum.DEPARTMENT_EMPLOYEE_FAILED);

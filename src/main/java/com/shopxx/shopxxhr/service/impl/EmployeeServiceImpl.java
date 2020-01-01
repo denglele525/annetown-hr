@@ -1,6 +1,7 @@
 package com.shopxx.shopxxhr.service.impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.shopxx.shopxxhr.entity.Employee;
 import com.shopxx.shopxxhr.entity.QEmployee;
 import com.shopxx.shopxxhr.entity.RespPageBean;
@@ -40,6 +41,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee saveOrUpdateDepartment(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Integer maxWorkID() {
+        QEmployee qEmployee = QEmployee.employee;
+        Employee employee = employeeRepository.findOne(qEmployee.workId.eq(JPAExpressions.select(qEmployee.workId.max()).from(qEmployee))).orElse(null);
+        if (employee != null) {
+            return employee.getWorkId();
+        }
+        return 0;
     }
 
 }

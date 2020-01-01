@@ -32,7 +32,7 @@ public class Employee {
     private Nation nation;
     private String nativePlace;
     @ManyToOne(fetch = FetchType.LAZY)
-    private PoliticsStatus politic;
+    private Politicsstatus politic;
     private String email;
     private String phone;
     private String address;
@@ -51,7 +51,7 @@ public class Employee {
     private Date beginDate;
     @Enumerated(EnumType.STRING)
     private WorkState workState;
-    private String workId;
+    private Integer workId;
     private Double contractTerm;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date conversionTime;
