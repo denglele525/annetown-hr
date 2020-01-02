@@ -89,14 +89,6 @@ public class Department {
         this.enabled = enabled;
     }
 
-    public boolean isParent() {
-        return isParent;
-    }
-
-    public void setParent(boolean parent) {
-        isParent = parent;
-    }
-
     public List<Department> getChildren() {
         return children;
     }
@@ -104,4 +96,13 @@ public class Department {
     public void setChildren(List<Department> children) {
         this.children = children;
     }
+
+    public boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(boolean parent) {
+        isParent = parent;
+    }
+
 }
