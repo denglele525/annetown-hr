@@ -1,2 +1,2 @@
 # shopxxhr
-Spring DataJpa + QueryDSL + vhr
+Spring Data Jpa + QueryDSL + Vhr
