@@ -2,6 +2,8 @@ package com.shopxx.shopxxhr.Controller.emp;
 
 import com.shopxx.shopxxhr.bean.RespBean;
 import com.shopxx.shopxxhr.entity.*;
+import com.shopxx.shopxxhr.exception.ExceptionEnum;
+import com.shopxx.shopxxhr.exception.HrException;
 import com.shopxx.shopxxhr.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/emp/basic")
+@RequestMapping("/employee/basic")
 public class EmpBasicController {
 
     @Autowired
@@ -32,7 +34,7 @@ public class EmpBasicController {
 
     @PostMapping("/")
     public RespBean addEmp(@RequestBody Employee employee) {
-        Employee result = employeeService.saveOrUpdateDepartment(employee);
+        Employee result = employeeService.saveOrUpdateEmp(employee);
         if (result != null) {
             return RespBean.ofSuccess(result);
         }
@@ -74,6 +76,16 @@ public class EmpBasicController {
     @GetMapping("/deps")
     public List<Department> getAllDepartments() {
         return departmentService.getAllDepartmentsByParentId(-1);
+    }
+
+    @DeleteMapping("/{id}")
+    public RespBean deleteEmpById(@PathVariable Integer id) {
+        try {
+            employeeService.deleteEmpById(id);
+        } catch (Exception e) {
+            throw new HrException(ExceptionEnum.EMPLOYEE_DELETE_FAILED);
+        }
+        return RespBean.ok("删除成功！");
     }
 
 }

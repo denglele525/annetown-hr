@@ -12,7 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,6 +24,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     @Override
     public RespPageBean getEmployeeByPage(Integer page, Integer size, String keyword) {
@@ -39,7 +46,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee saveOrUpdateDepartment(Employee employee) {
+    @Transactional
+    public Employee saveOrUpdateEmp(Employee employee) {
+        Date beginContract = employee.getBeginContract();
+        Date endContract = employee.getEndContract();
+        double month = (Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract))) * 12 +
+                (Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract)));
+        employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
         return employeeRepository.save(employee);
     }
 
@@ -51,6 +64,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             return employee.getWorkId();
         }
         return 0;
+    }
+
+    @Override
+    @Transactional
+    public void deleteEmpById(Integer id) {
+        employeeRepository.deleteById(id);
     }
 
 }
