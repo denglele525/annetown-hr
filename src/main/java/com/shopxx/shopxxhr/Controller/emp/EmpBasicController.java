@@ -5,7 +5,9 @@ import com.shopxx.shopxxhr.entity.*;
 import com.shopxx.shopxxhr.exception.ExceptionEnum;
 import com.shopxx.shopxxhr.exception.HrException;
 import com.shopxx.shopxxhr.service.*;
+import com.shopxx.shopxxhr.utils.POIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -86,6 +88,12 @@ public class EmpBasicController {
             throw new HrException(ExceptionEnum.EMPLOYEE_DELETE_FAILED);
         }
         return RespBean.ok("删除成功！");
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportData() {
+        List<Employee> list = (List<Employee>) employeeService.getEmployeeByPage(null, null, null).getData();
+        return POIUtils.employee2Excel(list);
     }
 
 }

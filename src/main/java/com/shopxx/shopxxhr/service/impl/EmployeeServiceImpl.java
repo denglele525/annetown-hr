@@ -7,6 +7,7 @@ import com.shopxx.shopxxhr.entity.QEmployee;
 import com.shopxx.shopxxhr.entity.RespPageBean;
 import com.shopxx.shopxxhr.repository.EmployeeRepository;
 import com.shopxx.shopxxhr.service.EmployeeService;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,17 +32,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public RespPageBean getEmployeeByPage(Integer page, Integer size, String keyword) {
         QEmployee qEmployee = QEmployee.employee;
+        RespPageBean respPageBean = new RespPageBean();
+        Pageable pageable = null;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (keyword != null) {
             booleanBuilder.and(qEmployee.name.like("%" + keyword + "%"));
         }
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Employee> all = employeeRepository.findAll(booleanBuilder, pageable);
-        long totalSize = all.getTotalElements();
-        List<Employee> employees = all.getContent();
-        RespPageBean respPageBean = new RespPageBean();
-        respPageBean.setData(employees);
-        respPageBean.setTotal(totalSize);
+        if (page != null && size != null) {
+            pageable = PageRequest.of(page - 1, size);
+            Page<Employee> all = employeeRepository.findAll(booleanBuilder, pageable);
+            long totalSize = all.getTotalElements();
+            List<Employee> employees = all.getContent();
+            respPageBean.setData(employees);
+            respPageBean.setTotal(totalSize);
+        } else {
+            List<Employee> employeeList = IterableUtils.toList(employeeRepository.findAll(booleanBuilder));
+            respPageBean.setData(employeeList);
+            respPageBean.setTotal(employeeList.size());
+        }
         return respPageBean;
     }
 
