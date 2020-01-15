@@ -80,4 +80,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public void addEmps(List<Employee> employees) {
+        employeeRepository.saveAll(employees);
+    }
+
 }

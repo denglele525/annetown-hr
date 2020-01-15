@@ -9,7 +9,9 @@ import com.shopxx.shopxxhr.utils.POIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -94,6 +96,14 @@ public class EmpBasicController {
     public ResponseEntity<byte[]> exportData() {
         List<Employee> list = (List<Employee>) employeeService.getEmployeeByPage(null, null, null).getData();
         return POIUtils.employee2Excel(list);
+    }
+
+    @PostMapping("/importData")
+    public RespBean importData(MultipartFile file) throws IOException {
+        List<Employee> list = POIUtils.excel2Employee(file, nationService.getAllNations(), politicsstatusService.getAllPoliticsstatuses()
+                , departmentService.getAllDepartmentsWithoutChildren(), positionService.getAllPositions(), jobLevelService.getAllJobLevels());
+        employeeService.addEmps(list);
+        return RespBean.ok("导入成功");
     }
 
 }

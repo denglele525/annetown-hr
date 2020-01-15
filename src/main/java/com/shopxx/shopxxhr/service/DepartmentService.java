@@ -11,4 +11,6 @@ public interface DepartmentService {
     Department saveOrUpdateDepartment(Department dep);
 
     Integer deleteDep(Integer did);
+
+    List<Department> getAllDepartmentsWithoutChildren();
 }

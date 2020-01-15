@@ -105,6 +105,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return 0;
     }
 
+    @Override
+    public List<Department> getAllDepartmentsWithoutChildren() {
+        return departmentRepository.findAll();
+    }
+
     private void findChildrenDepartments(Department department) {
         QDepartment qDepartment = new QDepartment("department" + department.getId());
         List<Department> childrenDepartments = jpaQueryFactory
