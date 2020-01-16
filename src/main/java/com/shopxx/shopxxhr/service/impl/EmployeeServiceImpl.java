@@ -1,6 +1,7 @@
 package com.shopxx.shopxxhr.service.impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPAExpressions;
 import com.shopxx.shopxxhr.entity.Employee;
 import com.shopxx.shopxxhr.entity.QEmployee;
@@ -30,17 +31,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     @Override
-    public RespPageBean getEmployeeByPage(Integer page, Integer size, String keyword) {
-        QEmployee qEmployee = QEmployee.employee;
+    public RespPageBean getEmployeeByPage(Integer page, Integer size, Predicate predicate) {
         RespPageBean respPageBean = new RespPageBean();
         Pageable pageable = null;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (keyword != null) {
-            booleanBuilder.and(qEmployee.name.like("%" + keyword + "%"));
-        }
         if (page != null && size != null) {
             pageable = PageRequest.of(page - 1, size);
-            Page<Employee> all = employeeRepository.findAll(booleanBuilder, pageable);
+            Page<Employee> all = employeeRepository.findAll(predicate, pageable);
             long totalSize = all.getTotalElements();
             List<Employee> employees = all.getContent();
             respPageBean.setData(employees);

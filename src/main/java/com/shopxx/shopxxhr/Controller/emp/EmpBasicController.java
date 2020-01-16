@@ -1,5 +1,6 @@
 package com.shopxx.shopxxhr.Controller.emp;
 
+import com.querydsl.core.types.Predicate;
 import com.shopxx.shopxxhr.bean.RespBean;
 import com.shopxx.shopxxhr.entity.*;
 import com.shopxx.shopxxhr.exception.ExceptionEnum;
@@ -7,6 +8,7 @@ import com.shopxx.shopxxhr.exception.HrException;
 import com.shopxx.shopxxhr.service.*;
 import com.shopxx.shopxxhr.utils.POIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +34,8 @@ public class EmpBasicController {
     DepartmentService departmentService;
 
     @GetMapping("/")
-    public RespPageBean getEmployeeByPage(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, String keyword) {
-        return employeeService.getEmployeeByPage(page, size, keyword);
+    public RespPageBean getEmployeeByPage(@QuerydslPredicate(root = Employee.class) Predicate predicate, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        return employeeService.getEmployeeByPage(page, size, predicate);
     }
 
     @PostMapping("/")
