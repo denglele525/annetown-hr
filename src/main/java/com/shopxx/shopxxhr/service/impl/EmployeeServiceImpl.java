@@ -31,22 +31,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     @Override
-    public RespPageBean getEmployeeByPage(Integer page, Integer size, Predicate predicate) {
+    public RespPageBean getEmployeeByPage(Integer page, Integer size, Predicate predicate, Date[] beginDateScope) {
+        QEmployee qEmployee = QEmployee.employee;
         RespPageBean respPageBean = new RespPageBean();
         Pageable pageable = null;
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        BooleanBuilder booleanBuilder = new BooleanBuilder(predicate);
+        if (beginDateScope != null) {
+            booleanBuilder.and(qEmployee.beginDate.after(beginDateScope[0]).and(qEmployee.beginDate.before(beginDateScope[1])));
+        }
         if (page != null && size != null) {
             pageable = PageRequest.of(page - 1, size);
-            Page<Employee> all = employeeRepository.findAll(predicate, pageable);
+            Page<Employee> all = employeeRepository.findAll(booleanBuilder, pageable);
             long totalSize = all.getTotalElements();
             List<Employee> employees = all.getContent();
             respPageBean.setData(employees);
             respPageBean.setTotal(totalSize);
-        } else {
-            List<Employee> employeeList = IterableUtils.toList(employeeRepository.findAll(booleanBuilder));
-            respPageBean.setData(employeeList);
-            respPageBean.setTotal(employeeList.size());
+            return respPageBean;
         }
+        List<Employee> employeeList = IterableUtils.toList(employeeRepository.findAll(booleanBuilder));
+        respPageBean.setData(employeeList);
+        respPageBean.setTotal(employeeList.size());
         return respPageBean;
     }
 

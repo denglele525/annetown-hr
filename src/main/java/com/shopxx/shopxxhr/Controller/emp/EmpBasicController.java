@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,8 +35,8 @@ public class EmpBasicController {
     DepartmentService departmentService;
 
     @GetMapping("/")
-    public RespPageBean getEmployeeByPage(@QuerydslPredicate(root = Employee.class) Predicate predicate, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-        return employeeService.getEmployeeByPage(page, size, predicate);
+    public RespPageBean getEmployeeByPage(@QuerydslPredicate(root = Employee.class) Predicate predicate, @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Date[] beginDateScope) {
+        return employeeService.getEmployeeByPage(page, size, predicate, beginDateScope);
     }
 
     @PostMapping("/")
@@ -96,7 +97,7 @@ public class EmpBasicController {
 
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportData() {
-        List<Employee> list = (List<Employee>) employeeService.getEmployeeByPage(null, null, null).getData();
+        List<Employee> list = (List<Employee>) employeeService.getEmployeeByPage(null, null, null, null).getData();
         return POIUtils.employee2Excel(list);
     }
 
